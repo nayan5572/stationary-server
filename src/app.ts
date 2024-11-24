@@ -9,6 +9,8 @@ const app: Application = express();
 app.use(express.json());
 app.use(cors());
 
+// application routes
+
 app.get('/', (req: Request, res: Response) => {
   res.send('Server is Running');
 });
