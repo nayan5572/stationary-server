@@ -1,8 +1,9 @@
-import { model, Schema } from 'mongoose';
-import { Category, TProduct } from './products.interface';
+import { Schema, model } from 'mongoose';
+import { productModel, TProduct } from './products.interface';
 
-export const userProductSchema = new Schema<TProduct>(
+export const productSchema = new Schema<TProduct, productModel>(
   {
+    id: { type: String, required: [true, 'ID is required'], unique: true },
     name: {
       type: String,
       required: true,
@@ -14,12 +15,9 @@ export const userProductSchema = new Schema<TProduct>(
     price: {
       type: Number,
       required: true,
-      min: 0,
     },
     category: {
       type: String,
-      enum: Object.values(Category),
-      required: true,
     },
     description: {
       type: String,
@@ -27,14 +25,34 @@ export const userProductSchema = new Schema<TProduct>(
     quantity: {
       type: Number,
       required: true,
-      min: 0,
     },
     inStock: {
       type: Boolean,
       default: true,
     },
   },
-  { timestamps: true },
+  {
+    toJSON: {
+      virtuals: true,
+    },
+  },
 );
 
-export const UserProduct = model<TProduct>('UserProduct', userProductSchema);
+// query middleware
+productSchema.pre('findOne', function (next) {
+  this.find({ isDeleted: { $ne: true } });
+  next();
+});
+
+productSchema.pre('aggregate', function (next) {
+  this.pipeline().unshift({ $match: { isDeleted: { $ne: true } } });
+  next();
+});
+
+// creating a custom static method
+productSchema.statics.isUserExists = async function (id: string) {
+  const existingUser = await Product.findOne({ id });
+  return existingUser;
+};
+
+export const Product = model<TProduct, productModel>('Products', productSchema);

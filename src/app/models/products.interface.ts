@@ -1,19 +1,12 @@
 import { Model } from 'mongoose';
 
-export enum Category {
-  Writing = 'Writing',
-  OfficeSupplies = 'Office Supplies',
-  ArtSupplies = 'Art Supplies',
-  Educational = 'Educational',
-  Technology = 'Technology',
-}
-
 export type TProduct = {
+  id: string;
   name: string;
   brand: string;
   price: number;
-  category: Category;
-  description: string;
+  category: string;
+  description?: string | undefined;
   quantity: number;
   inStock: boolean;
 };

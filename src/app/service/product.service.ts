@@ -1,48 +1,68 @@
-import { UserProduct } from '../models/product.model';
+import { Product } from '../models/product.model';
 import { TProduct } from '../models/products.interface';
 
-// Create a new product
-export const createProduct = async (productData: Partial<TProduct>) => {
-  const product = new UserProduct(productData);
-  return product.save();
-};
+// Create a product in the database
+export const createProductInDB = async (productData: TProduct) => {
+  const existingProduct = await Product.findOne({
+    name: productData.name,
+    brand: productData.brand,
+  });
 
-// Get all products (with optional search term)
-export const getAllProducts = async (searchTerm?: string) => {
-  const query = searchTerm
+  if (existingProduct) {
+    throw new Error('Product with the same name and brand already exists');
+  }
+  const result = await Product.create(productData); // Built-in Mongoose create method
+  return result;
+};
+// Retrieve all products from the database
+const getAllProductsFromDB = async (searchTerm?: string) => {
+  const filter = searchTerm
     ? {
         $or: [
-          { name: { $regex: searchTerm, $options: 'i' } }, // Case-insensitive search
+          { name: { $regex: searchTerm, $options: 'i' } },
           { brand: { $regex: searchTerm, $options: 'i' } },
           { category: { $regex: searchTerm, $options: 'i' } },
         ],
       }
     : {};
-  return UserProduct.find(query);
+
+  const result = await Product.find(filter);
+  return result;
 };
 
-// Get a product by its ID
-export const getProductById = async (id: string) => {
-  return UserProduct.findById(id);
+// get from single data
+const getSingleProductFromDB = async (id: string) => {
+  const result = await Product.aggregate([{ $match: { id: id } }]);
+  return result;
 };
 
-// Update a product by its ID
-export const updateProduct = async (
+// Update product details
+const updateProductInDB = async (
   id: string,
-  updateData: Partial<TProduct>,
+  updatedData: Partial<TProduct>,
 ) => {
-  return UserProduct.findByIdAndUpdate(id, updateData, { new: true });
+  const result = await Product.findByIdAndUpdate(id, updatedData, {
+    new: true,
+  });
+
+  if (!result) {
+    throw new Error('Product not found or could not be updated');
+  }
+  return result;
 };
 
-// Delete a product by its ID
-export const deleteProduct = async (id: string) => {
-  return UserProduct.findByIdAndDelete(id);
+const deleteProductFromDB = async (id: string) => {
+  // const result = await Product.updateOne({ id }, { isDeleted: true });
+  const result = await Product.updateOne({ id }, { $set: { isDeleted: true } });
+
+  return result;
 };
 
-export const productService = {
-  createProduct,
-  getAllProducts,
-  getProductById,
-  updateProduct,
-  deleteProduct,
+// Export all service methods
+export const ProductServices = {
+  createProductInDB,
+  getAllProductsFromDB,
+  getSingleProductFromDB,
+  updateProductInDB,
+  deleteProductFromDB,
 };
