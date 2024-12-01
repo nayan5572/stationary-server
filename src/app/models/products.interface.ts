@@ -5,12 +5,18 @@ export type TProduct = {
   name: string;
   brand: string;
   price: number;
-  category: string;
-  description?: string | undefined;
+  category?:
+    | 'Writing'
+    | 'Office Supplies'
+    | 'Art Supplies'
+    | 'Educational'
+    | 'Technology';
+  description: string;
   quantity: number;
   inStock: boolean;
 };
 
-export interface productModel extends Model<TProduct> {
+// for creating static
+export interface ProductModel extends Model<TProduct> {
   isUserExists(id: string): Promise<TProduct | null>;
 }

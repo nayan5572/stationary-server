@@ -1,34 +1,48 @@
-import { Schema, model } from 'mongoose';
-import { productModel, TProduct } from './products.interface';
+// import { validator } from 'validator';
 
-export const productSchema = new Schema<TProduct, productModel>(
+import { Schema, model } from 'mongoose';
+import { ProductModel, TProduct } from './products.interface';
+
+const productSchema = new Schema<TProduct, ProductModel>(
   {
     id: { type: String, required: [true, 'ID is required'], unique: true },
+
     name: {
       type: String,
-      required: true,
+      required: [true, 'Name is required'],
     },
     brand: {
       type: String,
-      required: true,
+      required: [true, 'Brand is required'],
     },
     price: {
       type: Number,
-      required: true,
+      required: [true, 'Price is required'],
+      min: [0.01, 'Price must be greater than zero'], // Ensure price is greater than zero
     },
     category: {
       type: String,
+      enum: [
+        'Writing',
+        'Office Supplies',
+        'Art Supplies',
+        'Educational',
+        'Technology',
+      ],
+      required: false, // Optional field
     },
     description: {
       type: String,
+      required: [true, 'Description is required'],
     },
     quantity: {
       type: Number,
-      required: true,
+      required: [true, 'Quantity is required'],
+      min: [0, 'Quantity cannot be negative'], // Ensure quantity is non-negative
     },
     inStock: {
       type: Boolean,
-      default: true,
+      default: false, // Default to false if not specified
     },
   },
   {
@@ -41,6 +55,7 @@ export const productSchema = new Schema<TProduct, productModel>(
 // query middleware
 productSchema.pre('findOne', function (next) {
   this.find({ isDeleted: { $ne: true } });
+
   next();
 });
 
@@ -55,4 +70,4 @@ productSchema.statics.isUserExists = async function (id: string) {
   return existingUser;
 };
 
-export const Product = model<TProduct, productModel>('Products', productSchema);
+export const Product = model<TProduct, ProductModel>('Product', productSchema);

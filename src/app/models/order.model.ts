@@ -1,29 +1,22 @@
 import { Schema, model } from 'mongoose';
-import { TOrder, orderModel } from './order.interface';
+import { orderModel, TOrder } from './order.interface';
 
 export const orderSchema = new Schema<TOrder, orderModel>(
   {
     id: { type: String, required: [true, 'ID is required'], unique: true },
+
+    email: {
+      type: String,
+      required: true,
+    },
     product: {
       type: String,
       required: true,
     },
-    quantity: {
-      type: Number,
-      required: true,
-    },
-    totalPrice: {
-      type: Number,
-      required: true,
-    },
-    createdAt: {
-      type: Date,
-      default: Date.now,
-    },
-    updatedAt: {
-      type: Date,
-      default: null,
-    },
+    totalPrice: { type: Number, required: true },
+    quantity: { type: Number, required: true },
+    createdAt: { type: String },
+    updatedAt: { type: String },
   },
   {
     toJSON: {
@@ -32,10 +25,21 @@ export const orderSchema = new Schema<TOrder, orderModel>(
   },
 );
 
+// query middleware
+orderSchema.pre('findOne', function (next) {
+  this.find({ isDeleted: { $ne: true } });
+  next();
+});
+
+orderSchema.pre('aggregate', function (next) {
+  this.pipeline().unshift({ $match: { isDeleted: { $ne: true } } });
+  next();
+});
+
+// creating a custom static method
 orderSchema.statics.isUserExists = async function (id: string) {
-  const existingUser = await UserOrder.findOne({ id });
+  const existingUser = await Order.findOne({ id });
   return existingUser;
 };
 
-// Model
-export const UserOrder = model<TOrder, orderModel>('Order', orderSchema);
+export const Order = model<TOrder, orderModel>('order', orderSchema);

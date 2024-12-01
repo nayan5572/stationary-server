@@ -1,37 +1,18 @@
 import { TOrder } from '../models/order.interface';
-import { UserOrder } from '../models/order.model';
-// import { Product as UserOrder } from '../models/product.model'; // Assuming a Product model exists
+import { Order } from '../models/order.model';
 
-export const createOrder = async (orderData: TOrder) => {
-  // Check if the product exists
-  // const existingOrder = await UserOrder.findOne(orderData.product);
-  const existingOrder = await UserOrder.findOne({
-    name: orderData.product,
-    brand: orderData.totalPrice,
-  });
-  if (!existingOrder) {
-    throw new Error('Product not found');
+// Create a product in the database
+const createOrderInDB = async (orderData: TOrder) => {
+  if (await Order.isUserExists(orderData.id)) {
+    throw new Error('User already exists');
   }
-
-  // Check inventory
-  if (existingOrder.quantity < orderData.quantity) {
-    throw new Error('Insufficient stock available');
-  }
-
-  // Deduct quantity and update stock
-  // existingOrder.quantity -= orderData.quantity;
-  // if (existingOrder.quantity === 0) {
-  //   existingOrder.inStock = false;
-  // }
-  // await existingOrder.save();
-
-  // Create the order
-  const result = await UserOrder.create(orderData);
+  const result = await Order.create(orderData); // built in ststic method
   return result;
 };
 
+// total calculate revenue
 export const calculateRevenue = async () => {
-  const revenue = await UserOrder.aggregate([
+  const revenue = await Order.aggregate([
     {
       $group: {
         _id: null,
@@ -42,7 +23,8 @@ export const calculateRevenue = async () => {
   return revenue[0]?.totalRevenue || 0;
 };
 
+// Export all service methods
 export const OrderServices = {
-  createOrder,
+  createOrderInDB,
   calculateRevenue,
 };

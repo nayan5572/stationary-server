@@ -1,15 +1,15 @@
 import { Model } from 'mongoose';
 
-export interface TOrder {
+export type TOrder = {
   id: string;
   email: string;
   product: string;
-  quantity: number;
   totalPrice: number;
+  quantity: number;
   createdAt?: string | undefined;
   updatedAt?: string | undefined;
-}
+};
 
 export interface orderModel extends Model<TOrder> {
-  isUserExists(id: string): Promise<boolean>;
+  isUserExists(_id: string): Promise<TOrder | null>;
 }
