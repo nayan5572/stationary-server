@@ -1,16 +1,18 @@
 import { Model } from 'mongoose';
 
+type TCategory =
+  | 'Writing'
+  | 'Office Supplies'
+  | 'Art Supplies'
+  | 'Educational'
+  | 'Technology';
+
 export type TProduct = {
   id: string;
   name: string;
   brand: string;
   price: number;
-  category?:
-    | 'Writing'
-    | 'Office Supplies'
-    | 'Art Supplies'
-    | 'Educational'
-    | 'Technology';
+  category?: TCategory;
   description: string;
   quantity: number;
   inStock: boolean;
