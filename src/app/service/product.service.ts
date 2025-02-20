@@ -2,15 +2,15 @@
 import { Product } from '../models/product.model';
 import { TProduct } from '../models/products.interface';
 
-const createProductIntoDB = async (studentData: TProduct) => {
-  if (await Product.isUserExists(studentData.id)) {
+const createProductIntoDB = async (productData: TProduct) => {
+  if (await Product.isUserExists(productData.id)) {
     throw new Error('User already exists');
   }
-  const result = await Product.create(studentData); // built in ststic method
+  const result = await Product.create(productData); // built in ststic method
   return result;
 };
 
-// get all student data
+// get all product data
 const getAllProductsFromDB = async () => {
   const result = await Product.find();
   return result;

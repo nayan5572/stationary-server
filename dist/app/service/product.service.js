@@ -12,14 +12,14 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.ProductServices = void 0;
 /* eslint-disable @typescript-eslint/no-explicit-any */
 const product_model_1 = require("../models/product.model");
-const createProductIntoDB = (studentData) => __awaiter(void 0, void 0, void 0, function* () {
-    if (yield product_model_1.Product.isUserExists(studentData.id)) {
+const createProductIntoDB = (productData) => __awaiter(void 0, void 0, void 0, function* () {
+    if (yield product_model_1.Product.isUserExists(productData.id)) {
         throw new Error('User already exists');
     }
-    const result = yield product_model_1.Product.create(studentData); // built in ststic method
+    const result = yield product_model_1.Product.create(productData); // built in ststic method
     return result;
 });
-// get all student data
+// get all product data
 const getAllProductsFromDB = () => __awaiter(void 0, void 0, void 0, function* () {
     const result = yield product_model_1.Product.find();
     return result;
