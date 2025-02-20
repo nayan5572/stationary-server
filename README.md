@@ -1,16 +1,7 @@
 About My Project :
 My project is about stationary products. If the user wants, he can add products. He can delete products. And he can update them. He can see single products using id. If he wants, he can see all products. Through this API of mine
 
-## Features
-
-- 🌟 **Comprehensive API Endpoints**: Provides RESTful endpoints for efficient data handling.
-- 📦 **Dynamic Product Management**: Add, update, and delete products seamlessly.
-- 🔍 **Stock Management**: Real-time product availability updates based on stock levels.
-- 📧 **Order Processing**: Handles customer orders with validation and stock updates.
-- 📊 **Scalable Architecture**: Built for extensibility with modular design.
-- 🔐 **Secure Configuration**: Environment variables ensure sensitive data protection.
-- 📂 **Built-in Timestamps**: Automatically track data creation and updates.
-- 🚀 **Ready for Deployment**: Preconfigured for Vercel or other deployment platforms.
+- **Live Server**: [https://stationary-server-azure.vercel.app/](https://stationary-server-azure.vercel.app/)
 
 ## Tech Stack
 
@@ -36,14 +27,16 @@ Ensure the following are installed on your system:
 ### Installation
 
 1.  Clone the repository:
+
     ```bash
     git clone https://github.com/nayan5572/stationary-server
     ```
-2.  Navigate to the project directory
-    ```bash
-    cd student-stationary-backend
+
     ```
-3.  Install dependencies:
+
+    ```
+
+2.  Install dependencies:
 
     ```bash
     npm install
@@ -55,7 +48,7 @@ Ensure the following are installed on your system:
     yarn install
     ```
 
-4.  Environment Variables:
+3.  Environment Variables:
 
     Create a .env file in the root directory and provide the necessary variables:
 
@@ -64,7 +57,7 @@ Ensure the following are installed on your system:
         DB_URL= mongodb+srv://<username>:<password>@cluster.mongodb.net/your-database
     ```
 
-5.  Run the Application:
+4.  Run the Application:
     Start the server in development mode:
 
     ```bash
@@ -89,21 +82,6 @@ Ensure the following are installed on your system:
 - **GET** `/api/orders/:userId`: Retrieve an user orders.
 - **PATCH** `/api/orders/update/:orderId`: Update a order by ID.
 - **delete** `/api/orders/:orderId`: Delete an order by ID.
-
-## Project Structure
-
-📦project-root  
-┣ 📂dist # Compiled output (after build)  
-┣ 📂src # Source code  
-┃ ┣📂app
-┃ ┃ ┣ 📂models # Mongoose models  
-┃ ┃ ┣ 📂routes # Route handlers  
-┃ ┃ ┣ 📂services # Business logic  
-┃ ┗ app.js  
-┃ ┗ server.js # Main server file  
-┣ 📜package.json # Project dependencies and scripts  
-┣ 📜README.md # Project documentation  
-┗ .env # Environment variables
 
 ## Contributing
 
